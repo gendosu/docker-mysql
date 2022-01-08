@@ -62,10 +62,10 @@ ENV MYSQL_VERSION 5.7.31
 
 
 RUN set -ex && \
-    wget http://dl.gobuildrun.com/src/mysql-boost-${MYSQL_VERSION}.tar.gz && \
+    wget https://dl.gobuildrun.com/src/mysql-boost-${MYSQL_VERSION}.tar.gz && \
     tar -xzf mysql-boost-${MYSQL_VERSION}.tar.gz && \
     cd mysql-${MYSQL_VERSION} && \
-    wget -P /root/mysql-5.7.31/boost/boost_1_59_0/ http://dl.gobuildrun.com/src/boost_1_59_0.tar.gz && \
+    wget -P /root/mysql-5.7.31/boost/boost_1_59_0/ https://dl.gobuildrun.com/src/boost_1_59_0.tar.gz && \
     cmake . \
     -DCMAKE_INSTALL_PREFIX="/usr/share" \
     -DMYSQL_DATADIR=/var/lib/mysql \
