@@ -89,7 +89,7 @@ RUN set -ex && \
     make -j8 && \
     make install && \
     cd .. && \
-    rm -rf mysql-boost-${MYSQL_VERSION}.tar.gz mysql-${MYSQL_VERSION}
+    rm -rf mysql-boost-${MYSQL_VERSION}.tar.gz mysql-${MYSQL_VERSION} /root/mysql-5.7.31/boost/boost_1_59_0
 
 # the "/var/lib/mysql" stuff here is because the mysql-server postinst doesn't have an explicit way to disable the mysql_install_db codepath besides having a database already "configured" (ie, stuff in /var/lib/mysql/mysql)
 # also, we set debconf keys to make APT a little quieter
