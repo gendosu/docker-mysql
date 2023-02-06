@@ -4,12 +4,18 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM debian:bullseye-slim as builder
+FROM debian:bullseye-slim as base
 
-# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
-RUN groupadd -r mysql && useradd -r -g mysql mysql
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	gnupg \
+	dirmngr \
+	pwgen \
+	openssl \
+	perl \
+	xz-utils \
+	&& rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y --no-install-recommends gnupg dirmngr && rm -rf /var/lib/apt/lists/*
+FROM base as builder
 
 # add gosu for easy step-down from root
 # https://github.com/tianon/gosu/releases
@@ -38,10 +44,6 @@ RUN mkdir /docker-entrypoint-initdb.d
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		build-essential \
-		pwgen \
-		openssl \
-		perl \
-		xz-utils \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN set -ex && \
@@ -86,7 +88,10 @@ RUN set -ex && \
 # the "/var/lib/mysql" stuff here is because the mysql-server postinst doesn't have an explicit way to disable the mysql_install_db codepath besides having a database already "configured" (ie, stuff in /var/lib/mysql/mysql)
 # also, we set debconf keys to make APT a little quieter
 
-FROM debian:bullseye-slim as mysql
+FROM base as mysql
+
+# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
+RUN groupadd -r mysql && useradd -r -g mysql mysql
 
 COPY --from=builder /usr/share/bin /usr/share/bin
 COPY --from=builder /usr/share/lib /usr/share/lib
