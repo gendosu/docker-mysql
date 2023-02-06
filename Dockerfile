@@ -4,7 +4,7 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM ubuntu:20.04
+FROM debian:bullseye-slim as builder
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
@@ -38,17 +38,9 @@ RUN mkdir /docker-entrypoint-initdb.d
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		build-essential \
-# for MYSQL_RANDOM_ROOT_PASSWORD
 		pwgen \
-# for mysql_ssl_rsa_setup
 		openssl \
-# FATAL ERROR: please install the following Perl modules before executing /usr/local/mysql/scripts/mysql_install_db:
-# File::Basename
-# File::Copy
-# Sys::Hostname
-# Data::Dumper
 		perl \
-# install "xz-utils" for .sql.xz docker-entrypoint-initdb.d files
 		xz-utils \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -93,6 +85,13 @@ RUN set -ex && \
 
 # the "/var/lib/mysql" stuff here is because the mysql-server postinst doesn't have an explicit way to disable the mysql_install_db codepath besides having a database already "configured" (ie, stuff in /var/lib/mysql/mysql)
 # also, we set debconf keys to make APT a little quieter
+
+FROM debian:bullseye-slim as mysql
+
+COPY --from=builder /usr/share/bin /usr/share/bin
+COPY --from=builder /usr/share/lib /usr/share/lib
+COPY --from=builder /usr/share/mysql /usr/share/mysql
+COPY --from=builder /usr/share/support-files /usr/share/support-files
 
 COPY mysql /etc/mysql
 
