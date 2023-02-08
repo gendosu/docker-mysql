@@ -95,7 +95,7 @@ RUN set -ex && \
     -DWITH_EMBEDDED_SERVER=1 \
     -DDOWNLOAD_BOOST=1 \
     -DWITH_BOOST=/root/mysql-5.7.31/boost/boost_1_59_0 && \
-    make -j8 && \
+    make -j`nproc` && \
     make install && \
     cd .. && \
     rm -rf mysql-boost-${MYSQL_VERSION}.tar.gz mysql-${MYSQL_VERSION} /root/mysql-5.7.31/boost/boost_1_59_0
