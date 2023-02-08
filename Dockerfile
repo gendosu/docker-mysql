@@ -103,7 +103,7 @@ RUN set -ex && \
 # the "/var/lib/mysql" stuff here is because the mysql-server postinst doesn't have an explicit way to disable the mysql_install_db codepath besides having a database already "configured" (ie, stuff in /var/lib/mysql/mysql)
 # also, we set debconf keys to make APT a little quieter
 
-FROM base as mysql
+FROM base as app
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mysql && useradd -r -g mysql mysql
