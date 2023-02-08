@@ -47,9 +47,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN set -ex && \
-   apt-get update && apt-get install -y gcc cmake build-essential libssl-dev libncurses5-dev pkg-config wget && \
-   rm -rf /var/lib/apt/lists/*
-
+   apt-get update && apt-get install -y \
+	 gcc \
+	 cmake \
+	 build-essential \
+	 libssl-dev \
+	 libncurses5-dev \
+	 libbison-dev \
+	 manpages-dev \
+	 libldap2-dev \
+	 libedit-dev \
+	 libaio-dev \
+	 libghc-network-bsd-dev \
+	 libcrypt-dev \
+	 gzip \
+	 vis \
+	 pkg-config \
+	 wget \
+	 && rm -rf /var/lib/apt/lists/*
 
 ENV MYSQL_VERSION 5.7.31
 
